@@ -2,56 +2,64 @@
 
 namespace PasswordProject
 {
+
     public class MenuManager
     {
-        private readonly User user;
-        private readonly LogIn logIn;
+        private readonly User _user;
         public static int UserPosition = -1;
+        public static int LoggedInUserPosition = -1;        
+        private UserManager _userManager;
 
-        public MenuManager(User user, LogIn logIn)
+        public MenuManager(User user)
         {
-            this.user = user;
-            this.logIn = logIn;
+            this._user = user;
+            this._userManager = new UserManager();
         }
         public void StartMenu()
         {
+            _userManager.GetUsers();
 
             bool isRunning = true;
 
             while (isRunning)
             {
-                Console.WriteLine("MENU LOGIN");
+                Console.WriteLine("\nMENU LOGIN\n");
 
                 Console.WriteLine("[1] Login");
-                Console.WriteLine("[2] Registrate user");
+                Console.WriteLine("[2] Create user");
                 Console.WriteLine("[3] Quit program");
 
-                Console.WriteLine("Select an option: ");
+                Console.Write("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
                 {
                     case "1":
-                        logIn.LogInToSystem();
+                        _userManager.LogInToSystem();
                         break;
                     case "2":
-                        user.CreateUser();
-                        user.AllUserNames();
-                        UserSystemMenu();
+                        _userManager.CreateUser();
+                        Console.Clear();
+                        Console.WriteLine("You created your account. Log in with your details.");
+                        StartMenu();
                         break;
                     case "3":
                         isRunning = Quit(isRunning);
                         break;
                     default:
-                        break;
+                        Console.WriteLine("There is no option recognized to your input. Try again!");
+                        StartMenu();
+                        return;
+                        
 
                 }
 
             }
         }
 
-        public static void UserSystemMenu()
+        public void UserSystemMenu()
         {
+            Console.Clear();
 
             bool isRunning = true;
 
@@ -63,20 +71,65 @@ namespace PasswordProject
                 Console.WriteLine("[2] Delete user");
                 Console.WriteLine("[3] Log out");
 
-                Console.WriteLine("Select an option: ");
+                Console.Write("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
                 {
-                    case "1": User.EditUser();
+                    case "1":
+                        _userManager.GetIndividualUser();
+                        EditMenu();
                         break;
                     case "2":
+                        _userManager.GetIndividualUser();
+                        _userManager.DeleteUser();
                         break;
                     case "3":
                         isRunning = LogOut(isRunning);
                         break;
                     default:
+                        Console.WriteLine("There is no option recognized to your input. Try again!");
+                        UserSystemMenu();
+                        return;
+                       
+
+                }
+
+            }
+        }
+
+        public void UserSystemMenuModerator()
+        {
+            Console.Clear();
+
+            bool isRunning = true;
+
+            while (isRunning)
+            {
+                Console.WriteLine("\nMENU USERSYSTEM FOR MODERATOR\n");
+        
+                Console.WriteLine("[1] View all users");
+                Console.WriteLine("[2] Log out");
+
+                Console.Write("\nSelect an option: ");
+                var input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        _userManager.GetAllUsernames();
+                        _userManager.SelectUser();
+                        _userManager.GetIndividualUser();
+                        _userManager.PromoteUserModerator();
                         break;
+                    case "2":
+                        isRunning = LogOut(isRunning);
+                        break;
+                    default:
+                        Console.WriteLine("There is no option recognized to your input. Try again!");
+                        UserSystemMenuAdmin();
+                        return;
+
 
                 }
 
@@ -84,32 +137,42 @@ namespace PasswordProject
         }
         public void UserSystemMenuAdmin()
         {
+            Console.Clear();
 
             bool isRunning = true;
 
             while (isRunning)
             {
-                Console.WriteLine("MENU USERSYSTEM");
+                Console.WriteLine("\nMENU USERSYSTEM FOR ADMIN\n");
 
                 Console.WriteLine("[1] Create user");
-                Console.WriteLine("[2] Edit user");
-                Console.WriteLine("[3] View user");
-                Console.WriteLine("[4] Log out");
+                Console.WriteLine("[2] View all users");
+                Console.WriteLine("[3] Log out");
 
-                Console.WriteLine("Select an option: ");
+                Console.Write("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
                 {
                     case "1":
+                        _userManager.CreateUser();
+                        Console.Clear();
+                        Console.WriteLine("New created user: " + _userManager.Users[UserPosition].Username);
                         break;
                     case "2":
-                        user.CreateUser();
+                        _userManager.GetAllUsernames();
+                        _userManager.SelectUser();
+                        _userManager.GetIndividualUser();
+                        UserMenu();
                         break;
                     case "3":
+                        isRunning = LogOut(isRunning);
                         break;
                     default:
-                        break;
+                        Console.WriteLine("There is no option recognized to your input. Try again!");
+                        UserSystemMenuAdmin();
+                        return;
+                        
 
                 }
 
@@ -123,38 +186,51 @@ namespace PasswordProject
 
             while (isRunning)
             {
-                Console.WriteLine("MENU INDIVIDUAL USER");
+                Console.WriteLine("\nMENU INDIVIDUAL USER\n");
 
-                Console.WriteLine("[1] Promote user");
-                Console.WriteLine("[2] Demote user");
-                Console.WriteLine("[3] Delete user");
-                Console.WriteLine("[4] Go back to Menu for user system");
+                Console.WriteLine("[1] Edit user");
+                Console.WriteLine("[2] Promote user");
+                Console.WriteLine("[3] Demote user");
+                Console.WriteLine("[4] Delete user");
+                Console.WriteLine("[5] Go back to Menu for user system");
 
-                Console.WriteLine("Select an option: ");
+                Console.Write("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
                 {
                     case "1":
+                        _userManager.GetIndividualUser();
+                        EditMenu();
                         break;
-                    case "2":
-                        user.CreateUser();
+                    case "2": _userManager.PromoteUserAdmin();
                         break;
-                    case "3":
+                    case "3": _userManager.DemoteUser();
                         break;
+                    case "4":
+                        if (_userManager.Users[LoggedInUserPosition].Access == "Admin")
+                        {
+                            _userManager.DeleteUser();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Only admin have access to delete a user");
+                        }
+                        break;
+                    case "5":
+                        UserSystemMenuAdmin();
+                        return;
                     default:
-                        break;
+                        Console.WriteLine("There is no option recognized to your input. Try again!");
+                        UserMenu();
+                        return;
+                        
 
                 }
 
             }
         }
 
-        public void UserMenuReadOnly()
-        {
-
-            //Info om valda användaren
-        }
 
         public void EditMenu()
         {
@@ -162,23 +238,44 @@ namespace PasswordProject
 
             while (isRunning)
             {
-                Console.WriteLine("EDIT USER");
+                Console.WriteLine("\nEDIT USER\n");
 
                 Console.WriteLine("[1] Edit name");
                 Console.WriteLine("[2] Edit password");
+                Console.WriteLine("[3] Go back to user menu");
 
 
-                Console.WriteLine("Select an option: ");
+                Console.Write("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
                 {
                     case "1":
+                        _userManager.EditUserName();
+                        Console.Clear();
+                        _userManager.GetIndividualUser();
                         break;
                     case "2":
+                        _userManager.EditPassword();
+                        Console.Clear();
+                        _userManager.GetIndividualUser();
+                        break;
+                    case "3":
+                        if (_userManager.Users[LoggedInUserPosition].Access == "Admin")
+                        {
+                            _userManager.GetAllUsernames();
+                            UserSystemMenuAdmin();
+                        }
+                        else
+                        {
+                            _userManager.GetIndividualUser();
+                            UserSystemMenu();
+                        }
                         break;
                     default:
-                        break;
+                        Console.WriteLine("There is no option recognized to your input. Try again!");
+                        EditMenu();
+                        return;
 
                 }
 
@@ -186,7 +283,9 @@ namespace PasswordProject
 
         }
 
-        public static bool Quit(bool isRunning)
+
+
+        public bool Quit(bool isRunning)
         {
             Console.Write("\nDo you want to quit y/n? ");
             var exit = Console.ReadLine().ToUpper();
@@ -209,7 +308,7 @@ namespace PasswordProject
             return isRunning;
         }
 
-        public static bool LogOut(bool isRunning)
+        public bool LogOut(bool isRunning)
         {
             Console.Write("\nDo you want to log out y/n? ");
             var input = Console.ReadLine().ToUpper();
@@ -223,6 +322,8 @@ namespace PasswordProject
 
             if (input == "Y")
             {
+                Console.Clear();
+                LoggedInUserPosition = -1;
                 isRunning = false;
                 return isRunning;
             }

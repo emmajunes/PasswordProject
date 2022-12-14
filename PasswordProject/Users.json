@@ -1,52 +1,74 @@
 [
   {
-    "UserName": "Emma",
-    "Email": "emmastrom@gmail.com",
-    "Password": "shre46e4"
+    "Username": "Admin",
+    "Email": "admin@gmail.com",
+    "Password": "S",
+    "Access": "Admin"
   },
   {
-    "UserName": "degsart",
-    "Email": "e4tew46",
-    "Password": "drhysy"
+    "Username": "markus",
+    "Email": "markus@mail.com",
+    "Password": "Aa123456!",
+    "Access": "Admin"
   },
   {
-    "UserName": "fsdgrgs",
-    "Email": "4wt",
-    "Password": "he5y5"
+    "Username": "loggan",
+    "Email": "lo@gmail.com",
+    "Password": "Aa123456!",
+    "Access": "Moderator"
   },
   {
-    "UserName": "junesEmma",
-    "Email": "emmajunes@gmail.com",
-    "Password": "gresetw456"
+    "Username": "Palle",
+    "Email": "palle@gmail.com",
+    "Password": "Aa123456!",
+    "Access": "Admin"
   },
   {
-    "UserName": "Hej",
-    "Email": "klar",
-    "Password": "grety"
+    "Username": "Kung",
+    "Email": "kung@gmail.com",
+    "Password": "hej123Q!",
+    "Access": "Moderator"
   },
   {
-    "UserName": "titt",
-    "Email": "sga4t",
-    "Password": "453ya"
+    "Username": "Toker",
+    "Email": "toker@gmail.com",
+    "Password": "Toker!12",
+    "Access": "User"
   },
   {
-    "UserName": "sre46",
-    "Email": "trur",
-    "Password": "dfhd"
+    "Username": "Goliat",
+    "Email": "metod@gmail.com",
+    "Password": "Siffror!12",
+    "Access": "User"
   },
   {
-    "UserName": "srgse4",
-    "Email": "dsryd",
-    "Password": "sdfd"
+    "Username": "jultomten",
+    "Email": "santa@mail.se",
+    "Password": "Santasren!12",
+    "Access": "User"
   },
   {
-    "UserName": "fgdrf",
-    "Email": "hdrzhd",
-    "Password": "rydz"
+    "Username": "Emma",
+    "Email": "emma@gmail.com",
+    "Password": "Aa123456!",
+    "Access": "User"
   },
   {
-    "UserName": "greta",
-    "Email": "em",
-    "Password": "3solar"
+    "Username": "tokis",
+    "Email": "toki@gmail.com",
+    "Password": "TOK123!",
+    "Access": "User"
+  },
+  {
+    "Username": "please",
+    "Email": "please@gmail.com",
+    "Password": "HOHO123#",
+    "Access": "User"
+  },
+  {
+    "Username": "oki",
+    "Email": "oki@gmail.com",
+    "Password": "KOLAI123!",
+    "Access": "User"
   }
 ]

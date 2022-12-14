@@ -1,38 +1,40 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PasswordProject
 {
-    public class FileManager
+    public static class FileManager
+
     {
-        private static readonly string _currentDir = Environment.CurrentDirectory;
-        private static readonly string _path = Directory.GetParent(_currentDir).Parent.Parent.FullName + @"\Users.json";
-        public static List<User> Users = GetJson();
-
-        public void CreateJson()
+        public static void CreateJson(string path)
         {
-            if (!File.Exists(_path))
-            {
-                using (var fs = File.Create(_path)) { }
 
-                File.WriteAllText(_path, "[]");
+            if (!File.Exists(path) || String.IsNullOrEmpty(File.ReadAllText(path)) || File.ReadAllText(path) == "[]")
+            {
+                using (var fs = File.Create(path)) { }
+
+                File.WriteAllText(path, @"[{""Username"":""Admin"",""Email"":""admin@gmail.com"",""Password"":""S"",""Access"":""Admin""}]");
             }
+
+            
         }
 
-        public static List<User> GetJson()
+        public static List<T> GetJson<T>(string path)
         {
-            var jsonData = File.ReadAllText(_path);
+            var jsonData = File.ReadAllText(path);
 
-            var lists = JsonSerializer.Deserialize<List<User>>(jsonData);
+            var lists = JsonSerializer.Deserialize<List<T>>(jsonData);
 
             return lists;
         }
 
-        public static void UpdateJson()
+        public static void UpdateJson<T>(string path, T data)
         {
-            var jsonData = JsonSerializer.Serialize(Users);
+            var jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions() { WriteIndented = true});
 
-            File.WriteAllText(_path, jsonData);
+            File.WriteAllText(path, jsonData);
         }
     }
 }
