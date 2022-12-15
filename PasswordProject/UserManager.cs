@@ -172,20 +172,6 @@ namespace PasswordProject
             return password;
         }
 
-        public void GetAllUsernames()
-        {
-            GetUsers();
-            //Console.Clear();
-
-            Console.WriteLine("\nOVERVIEW OF USERS: \n");
-            var index = 1;
-            foreach (var user in Users)
-            {
-                Console.WriteLine($"[{index}] {user.Username}");
-                index++;
-            }
-        }
-
         public void SelectUser()
         {
 
@@ -206,7 +192,7 @@ namespace PasswordProject
             catch (ArgumentOutOfRangeException)
             {
                 Console.WriteLine("User index does not exist!");
-                
+
             }
             catch (FormatException)
             {
@@ -215,12 +201,27 @@ namespace PasswordProject
             }
 
         }
+        public void GetAllUsernames()
+        {
+            GetUsers();
+            //Console.Clear();
+
+            Console.WriteLine("\nOVERVIEW OF USERS: \n");
+            var index = 1;
+            foreach (var user in Users)
+            {
+                Console.WriteLine($"[{index}] \n{user.Username} ({user.Access})");
+                index++;
+            }
+        }
+
 
         public void GetIndividualUser()
         {
-            GetUsers();
-
             Console.Clear();
+
+            GetUsers();
+            
 
             if (MenuManager.UserPosition < 0)
             {
@@ -257,8 +258,6 @@ namespace PasswordProject
 
         public void DeleteUser()
         {
-            //var selectedUser = Users[MenuManager.UserPosition];
-
             Console.WriteLine("Do you want to delete this user y/n? ");
             var deleteAnswer = Console.ReadLine().ToUpper();
 

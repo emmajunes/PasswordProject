@@ -27,19 +27,7 @@
     "Username": "adrian",
     "Email": "toker@gmail.com",
     "Password": "Toker!12",
-    "Access": "Moderator"
-  },
-  {
-    "Username": "jultomten",
-    "Email": "santa@mail.se",
-    "Password": "Santasren!12",
-    "Access": "User"
-  },
-  {
-    "Username": "please",
-    "Email": "please@gmail.com",
-    "Password": "HOHO123#",
-    "Access": "User"
+    "Access": "Admin"
   },
   {
     "Username": "oki",
@@ -51,7 +39,7 @@
     "Username": "kalllle",
     "Email": "kalle@gmail.com",
     "Password": "Aa123456!!",
-    "Access": "User"
+    "Access": "Moderator"
   },
   {
     "Username": "santis",

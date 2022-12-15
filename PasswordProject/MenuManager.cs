@@ -53,9 +53,7 @@ namespace PasswordProject
                         StartMenu();
                         return;
                         
-
                 }
-
             }
         }
 
@@ -79,6 +77,7 @@ namespace PasswordProject
                 switch (input)
                 {
                     case "1":
+
                         _userManager.GetIndividualUser();
                         EditMenu();
                         break;
@@ -102,7 +101,6 @@ namespace PasswordProject
                        
 
                 }
-
             }
         }
 
@@ -127,10 +125,12 @@ namespace PasswordProject
                 switch (input)
                 {
                     case "1":
+                        UserPosition = -1;
                         _userManager.GetIndividualUser();
                         EditMenu();
                         break;
                     case "2":
+                        UserPosition = -1;
                         _userManager.GetIndividualUser();
                         _userManager.DeleteUser();
                         break;
@@ -138,7 +138,10 @@ namespace PasswordProject
                         _userManager.GetAllUsernames();
                         _userManager.SelectUser();
                         _userManager.GetIndividualUser();
+                        if (_userManager.Users[UserPosition].Access == "User")
+                        {
                         _userManager.PromoteUserModerator();
+                        }
                         break;
                     case "4":
                         isRunning = LogOut(isRunning);
@@ -153,8 +156,6 @@ namespace PasswordProject
                         Thread.Sleep(1500);
                         UserSystemMenuModerator();
                         return;
-
-
                 }
 
             }
@@ -202,10 +203,7 @@ namespace PasswordProject
                         Console.WriteLine("There is no option recognized to your input. Try again!");
                         Thread.Sleep(1500);
                         break;
-                        
-
                 }
-
             }
         }
 
@@ -261,10 +259,8 @@ namespace PasswordProject
                         Thread.Sleep(1500);
                         _userManager.GetIndividualUser();
                         UserMenu();
-                        return;
-                    
+                        return;                  
                 }
-
             }
         }
 
@@ -309,9 +305,7 @@ namespace PasswordProject
                         break;
 
                 }
-
             }
-
         }
 
         public void GoBackToUserMenu()
@@ -346,12 +340,11 @@ namespace PasswordProject
 
             if (input == "Y")
             {
-              
+                UserPosition = -1;
                 LoggedInUserPosition = -1;
                 isRunning = false;
                 return isRunning;
             }
-
 
             return isRunning;
         }
@@ -378,6 +371,5 @@ namespace PasswordProject
 
             return isRunning;
         }
-
     }
 }
