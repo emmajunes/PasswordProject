@@ -26,6 +26,17 @@ namespace PasswordProject
                 return;
             }
 
+            foreach (var user in Users)
+            {
+                if (user.Username == username)
+                {
+                    Console.WriteLine("Username already exists. Try again!");
+                    CreateUser();
+                    return;
+                }
+
+            }
+
             Console.WriteLine("Enter email: ");
             string email = Console.ReadLine();
 
@@ -164,7 +175,7 @@ namespace PasswordProject
         public void GetAllUsernames()
         {
             GetUsers();
-            Console.Clear();
+            //Console.Clear();
 
             Console.WriteLine("\nOVERVIEW OF USERS: \n");
             var index = 1;
@@ -177,14 +188,38 @@ namespace PasswordProject
 
         public void SelectUser()
         {
-            Console.WriteLine("\nSelect user: ");
-            int input = Convert.ToInt32(Console.ReadLine());
 
-            MenuManager.UserPosition = Convert.ToInt32(input - 1);
+            Console.WriteLine("\nSelect user: ");
+            var input = Console.ReadLine();
+
+            if (String.IsNullOrWhiteSpace(input) || Convert.ToInt32(input) <= 0)
+            {
+                Console.WriteLine("Input cannot be empty and needs to be a value over 0");
+                SelectUser();
+                return;
+            }
+
+            try
+            {
+                MenuManager.UserPosition = Convert.ToInt32(input) - 1;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("User index does not exist!");
+                
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Wrong input!");
+
+            }
+
         }
 
         public void GetIndividualUser()
         {
+            GetUsers();
+
             Console.Clear();
 
             if (MenuManager.UserPosition < 0)
@@ -195,16 +230,29 @@ namespace PasswordProject
                 Console.WriteLine("PASSWORD: " + Users[MenuManager.LoggedInUserPosition].Password);
                 Console.WriteLine("ACCESS: " + Users[MenuManager.LoggedInUserPosition].Access);
             }
-            if (MenuManager.UserPosition >= 0)
+
+            try
             {
-                Console.WriteLine("\nINFO ABOUT USER: \n");
-                Console.WriteLine("USERNAME: " + Users[MenuManager.UserPosition].Username);
-                Console.WriteLine("EMAIL: " + Users[MenuManager.UserPosition].Email);
-                Console.WriteLine("PASSWORD: " + Users[MenuManager.UserPosition].Password);
-                Console.WriteLine("ACCESS: " + Users[MenuManager.UserPosition].Access);
+                if (MenuManager.UserPosition >= 0)
+                {
+                    Console.WriteLine("\nINFO ABOUT USER: \n");
+                    Console.WriteLine("USERNAME: " + Users[MenuManager.UserPosition].Username);
+                    Console.WriteLine("EMAIL: " + Users[MenuManager.UserPosition].Email);
+                    Console.WriteLine("PASSWORD: " + Users[MenuManager.UserPosition].Password);
+                    Console.WriteLine("ACCESS: " + Users[MenuManager.UserPosition].Access);
+                }
             }
+            catch (ArgumentOutOfRangeException)
+            {
 
-
+                Console.WriteLine("User index does not exist. Try again!");
+                Thread.Sleep(1500);
+                GetAllUsernames();
+                SelectUser();
+                GetIndividualUser();
+                return;
+            }
+           
         }
 
         public void DeleteUser()
@@ -224,7 +272,7 @@ namespace PasswordProject
             if (deleteAnswer == "Y")
             {
                 Console.Clear();
-               
+
                 if (MenuManager.UserPosition < 0)
                 {
                     Users.RemoveAt(MenuManager.LoggedInUserPosition);
@@ -262,6 +310,8 @@ namespace PasswordProject
 
         public void PromoteUserAdmin()
         {
+            GetUsers();
+
             var selectedUser = Users[MenuManager.UserPosition];
 
             bool isRunning = true;
@@ -292,15 +342,18 @@ namespace PasswordProject
                         Console.WriteLine(selectedUser.Username + " is promoted to moderator");
                         return;
                     case "3":
-                        Console.Clear();
+                        //Console.Clear();
                         var menu = new MenuManager(new User());
+                        GetIndividualUser();
                         menu.UserMenu();
                         break;
                     default:
                         Console.WriteLine("There is no option recognized to your input. Try again!");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        GetIndividualUser();
                         PromoteUserAdmin();
                         return;
-
 
                 }
 
@@ -338,6 +391,9 @@ namespace PasswordProject
                         break;
                     default:
                         Console.WriteLine("There is no option recognized to your input. Try again!");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        GetIndividualUser();
                         PromoteUserModerator();
                         return;
 
@@ -380,10 +436,14 @@ namespace PasswordProject
                     case "3":
                         Console.Clear();
                         var menu = new MenuManager(new User());
+                        GetIndividualUser();
                         menu.UserMenu();
                         break;
                     default:
                         Console.WriteLine("There is no option recognized to your input. Try again!");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        GetIndividualUser();
                         DemoteUser();
                         return;
 
@@ -407,6 +467,17 @@ namespace PasswordProject
                 EditUserName();
                 return;
             }
+            foreach (var user in Users)
+            {
+                if (user.Username == newUsername)
+                {
+                    Console.WriteLine("Username already exists. Try again!");
+                    EditUserName();
+                    return;
+                }
+
+            }
+
             if (MenuManager.UserPosition < 0)
             {
                 var loggedInUser = Users[MenuManager.LoggedInUserPosition];
@@ -434,7 +505,7 @@ namespace PasswordProject
             if (!isValidPassword)
             {
                 Console.WriteLine("Invalid email! Choose a password that includes specialcharacter and atleast one number and one uppercase character.");
-                CreateUser();
+                EditPassword();
                 return;
             }
 
@@ -455,65 +526,86 @@ namespace PasswordProject
 
         public void LogInToSystem()
         {
-            Console.WriteLine("\nEnter username: ");
-            var login = Console.ReadLine();
+            
+            var maxAttempts = 2;
+            var currentAttempt = 0;
 
-            foreach (var user in Users)
+            for (int i = 0; i < maxAttempts; i++) 
             {
-                if (user.Username == login)
+                Console.WriteLine("\nEnter username: ");
+                var login = Console.ReadLine(); 
+
+                foreach (var user in Users)
                 {
-                    MenuManager.LoggedInUserPosition = Users.IndexOf(user);
+                    if (user.Username == login)
+                    {
+                        MenuManager.LoggedInUserPosition = Users.IndexOf(user);
+                    }
                 }
 
-            }
+                if (MenuManager.LoggedInUserPosition == -1)
+                {
+                    Console.WriteLine("User does not exist!"); 
+                    currentAttempt++;
+                    continue; 
+                }
 
-            if (MenuManager.LoggedInUserPosition == -1)
-            {
-                Console.WriteLine("User does not exist!");
+
+                for (int p = 0; p < maxAttempts; p++)
+                {
+                    Console.WriteLine("Enter password: ");
+                    var passwordInput = HidePassword();
+
+                    if (String.IsNullOrWhiteSpace(passwordInput))
+                    {
+                        Console.WriteLine("Password field cannot be empty");
+                        passwordInput = HidePassword();
+                    }
+
+                    if (Users[MenuManager.LoggedInUserPosition].Password != passwordInput)
+                    {
+                        currentAttempt++;
+
+                        if (currentAttempt < 2) 
+                        {
+                            Console.WriteLine("Wrong password. Try again!");
+                        }
+
+                        //MenuManager.LoggedInUserPosition = -1;
+                    }
+
+                    var menu = new MenuManager(new User());
+
+                    if (Users[MenuManager.LoggedInUserPosition].Password == passwordInput)
+                    {
+                        Console.WriteLine("Logging in...");
+                        Thread.Sleep(2000);
+                        if (Users[MenuManager.LoggedInUserPosition].Access == "Admin")
+                        {
+                            menu.UserSystemMenuAdmin();
+                            
+                        }
+                        else if (Users[MenuManager.LoggedInUserPosition].Access == "Moderator")
+                        {
+                            menu.UserSystemMenuModerator();
+                           
+                        }
+                        else
+                        {
+                            menu.UserSystemMenu();
+                            
+                        }
+
+                        break;
+
+                    }
+
+                   
+                }
                 
-
-
             }
 
-            Console.WriteLine("Enter password: ");
-            var passwordInput = HidePassword();
-
-            if (String.IsNullOrWhiteSpace(passwordInput))
-            {
-                Console.WriteLine("Password field cannot be empty");
-                
-            }
-            if (Users[MenuManager.LoggedInUserPosition].Password != passwordInput)
-            {
-                Console.WriteLine("Wrong password. Try again!");
-                MenuManager.LoggedInUserPosition = -1;
-                
-            }
-            var menu = new MenuManager(new User());
-
-            if (Users[MenuManager.LoggedInUserPosition].Password == passwordInput)
-            {
-                Console.WriteLine("Logging in...");
-                Thread.Sleep(2000);
-                if (Users[MenuManager.LoggedInUserPosition].Access == "Admin")
-                {
-                    menu.UserSystemMenuAdmin();
-                }
-                else if (Users[MenuManager.LoggedInUserPosition].Access == "Moderator")
-                {
-                    menu.UserSystemMenuModerator();
-                }
-                else
-                {
-                    menu.UserSystemMenu();
-                }
-
-            }
-           
-
-            //var correctPassword = Users[MenuManager.LoggedInUserPosition].Password;
-            //return passwordInput == correctPassword;
-
+            Console.WriteLine("To many tries!");
         }
     }
 

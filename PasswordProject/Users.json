@@ -6,9 +6,9 @@
     "Access": "Admin"
   },
   {
-    "Username": "markus",
+    "Username": "macko",
     "Email": "markus@mail.com",
-    "Password": "Aa123456!",
+    "Password": "SantaClaus123!",
     "Access": "Admin"
   },
   {
@@ -18,45 +18,21 @@
     "Access": "Moderator"
   },
   {
-    "Username": "Palle",
+    "Username": "Kung",
     "Email": "palle@gmail.com",
     "Password": "Aa123456!",
-    "Access": "Admin"
-  },
-  {
-    "Username": "Kung",
-    "Email": "kung@gmail.com",
-    "Password": "hej123Q!",
     "Access": "Moderator"
   },
   {
-    "Username": "Toker",
+    "Username": "adrian",
     "Email": "toker@gmail.com",
     "Password": "Toker!12",
-    "Access": "User"
-  },
-  {
-    "Username": "Goliat",
-    "Email": "metod@gmail.com",
-    "Password": "Siffror!12",
-    "Access": "User"
+    "Access": "Moderator"
   },
   {
     "Username": "jultomten",
     "Email": "santa@mail.se",
     "Password": "Santasren!12",
-    "Access": "User"
-  },
-  {
-    "Username": "Emma",
-    "Email": "emma@gmail.com",
-    "Password": "Aa123456!",
-    "Access": "User"
-  },
-  {
-    "Username": "tokis",
-    "Email": "toki@gmail.com",
-    "Password": "TOK123!",
     "Access": "User"
   },
   {
@@ -69,6 +45,30 @@
     "Username": "oki",
     "Email": "oki@gmail.com",
     "Password": "KOLAI123!",
+    "Access": "User"
+  },
+  {
+    "Username": "kalllle",
+    "Email": "kalle@gmail.com",
+    "Password": "Aa123456!!",
+    "Access": "User"
+  },
+  {
+    "Username": "santis",
+    "Email": "ren@gmail.com",
+    "Password": "TomtensRenis12!",
+    "Access": "User"
+  },
+  {
+    "Username": "tomten",
+    "Email": "jultomten@gmail.com",
+    "Password": "kokolokoAS1!",
+    "Access": "User"
+  },
+  {
+    "Username": "kalle",
+    "Email": "kalles@gmail.com",
+    "Password": "Aa123456!",
     "Access": "User"
   }
 ]
