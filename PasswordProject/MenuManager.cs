@@ -2,7 +2,6 @@
 
 namespace PasswordProject
 {
-
     public class MenuManager
     {
         private readonly User _user;
@@ -26,7 +25,7 @@ namespace PasswordProject
                 Console.WriteLine("\nMENU LOGIN\n");
 
                 Console.WriteLine("[1] Login");
-                Console.WriteLine("[2] Create user");
+                Console.WriteLine("[2] Create account");
                 Console.WriteLine("[3] Quit program");
 
                 Console.Write("\nSelect an option: ");
@@ -67,8 +66,8 @@ namespace PasswordProject
             {
                 Console.WriteLine("\nMENU USERSYSTEM\n");
 
-                Console.WriteLine("[1] Edit user");
-                Console.WriteLine("[2] Delete user");
+                Console.WriteLine("[1] Edit my account");
+                Console.WriteLine("[2] Delete my account");
                 Console.WriteLine("[3] Log out");
 
                 Console.Write("\nSelect an option: ");
@@ -99,7 +98,6 @@ namespace PasswordProject
                         UserSystemMenu();
                         return;
                        
-
                 }
             }
         }
@@ -114,8 +112,8 @@ namespace PasswordProject
             {
                 Console.WriteLine("\nMENU USERSYSTEM FOR MODERATOR\n");
 
-                Console.WriteLine("[1] Edit your user");
-                Console.WriteLine("[2] Delete your user");
+                Console.WriteLine("[1] Edit my account");
+                Console.WriteLine("[2] Delete my account");
                 Console.WriteLine("[3] View all users");
                 Console.WriteLine("[4] Log out");
 
@@ -170,7 +168,7 @@ namespace PasswordProject
             {
                 Console.WriteLine("\nMENU USERSYSTEM FOR ADMIN\n");
 
-                Console.WriteLine("[1] Create user");
+                Console.WriteLine("[1] Create account");
                 Console.WriteLine("[2] View all users");
                 Console.WriteLine("[3] Log out");
 
@@ -216,11 +214,11 @@ namespace PasswordProject
             {
                 Console.WriteLine("\nMENU INDIVIDUAL USER\n");
 
-                Console.WriteLine("[1] Edit user");
+                Console.WriteLine("[1] Edit account");
                 Console.WriteLine("[2] Promote user");
                 Console.WriteLine("[3] Demote user");
                 Console.WriteLine("[4] Delete user");
-                Console.WriteLine("[5] Go back to Menu for user system");
+                Console.WriteLine("[5] Go back to menu for usersystem");
 
                 Console.Write("\nSelect an option: ");
                 var input = Console.ReadLine();
@@ -273,10 +271,9 @@ namespace PasswordProject
             {
                 Console.WriteLine("\nEDIT USER\n");
 
-                Console.WriteLine("[1] Edit name");
+                Console.WriteLine("[1] Edit username");
                 Console.WriteLine("[2] Edit password");
                 Console.WriteLine("[3] Go back to user menu");
-
 
                 Console.Write("\nSelect an option: ");
                 var input = Console.ReadLine();
@@ -310,7 +307,7 @@ namespace PasswordProject
 
         public void GoBackToUserMenu()
         {
-            if (LoggedInUserPosition > 0 && _userManager.Users[LoggedInUserPosition].Access == "Admin")
+            if (LoggedInUserPosition >= 0 && _userManager.Users[LoggedInUserPosition].Access == "Admin")
             {
                 _userManager.GetAllUsernames();
                 UserSystemMenuAdmin();

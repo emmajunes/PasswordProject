@@ -56,7 +56,7 @@ namespace PasswordProject
 
             if (!isValidPassword)
             {
-                Console.WriteLine("Invalid email! Choose a password that includes specialcharacter and atleast one number and one uppercase character.");
+                Console.WriteLine("Invalid email! Choose a password that includes a specialcharacter and atleast one number and one uppercase character.");
                 CreateUser();
                 return;
             }
@@ -68,7 +68,6 @@ namespace PasswordProject
                 Password = password,
                 Access = "User"
             };
-
 
             Users.Add(newUser);
 
@@ -172,6 +171,90 @@ namespace PasswordProject
             return password;
         }
 
+        public void LogInToSystem()
+        {
+
+            var maxAttempts = 2;
+            var currentAttempt = 0;
+
+            for (int i = 0; i < maxAttempts; i++)
+            {
+                Console.WriteLine("\nEnter username: ");
+                var login = Console.ReadLine();
+
+                foreach (var user in Users)
+                {
+                    if (user.Username == login)
+                    {
+                        MenuManager.LoggedInUserPosition = Users.IndexOf(user);
+                    }
+                }
+
+                if (MenuManager.LoggedInUserPosition == -1)
+                {
+                    Console.WriteLine("User does not exist!");
+                    currentAttempt++;
+                    continue;
+                }
+
+
+                for (int p = 0; p < maxAttempts; p++)
+                {
+                    Console.WriteLine("Enter password: ");
+                    var passwordInput = HidePassword();
+
+                    if (String.IsNullOrWhiteSpace(passwordInput))
+                    {
+                        Console.WriteLine("Password field cannot be empty");
+                        passwordInput = HidePassword();
+                    }
+
+                    if (Users[MenuManager.LoggedInUserPosition].Password != passwordInput)
+                    {
+                        currentAttempt++;
+
+                        if (currentAttempt < 2)
+                        {
+                            Console.WriteLine("Wrong password. Try again!");
+                        }
+
+                        //MenuManager.LoggedInUserPosition = -1;
+                    }
+
+                    var menu = new MenuManager(new User());
+
+                    if (Users[MenuManager.LoggedInUserPosition].Password == passwordInput)
+                    {
+                        Console.WriteLine("Logging in...");
+                        Thread.Sleep(2000);
+                        if (Users[MenuManager.LoggedInUserPosition].Access == "Admin")
+                        {
+                            menu.UserSystemMenuAdmin();
+
+                        }
+                        else if (Users[MenuManager.LoggedInUserPosition].Access == "Moderator")
+                        {
+                            menu.UserSystemMenuModerator();
+
+                        }
+                        else
+                        {
+                            menu.UserSystemMenu();
+
+                        }
+
+                        break;
+
+                    }
+
+
+                }
+
+            }
+
+            Console.WriteLine("To many tries!");
+        }
+
         public void SelectUser()
         {
 
@@ -210,7 +293,7 @@ namespace PasswordProject
             var index = 1;
             foreach (var user in Users)
             {
-                Console.WriteLine($"[{index}] \n{user.Username} ({user.Access})");
+                Console.WriteLine($"[{index}] {user.Username} ({user.Access})");
                 index++;
             }
         }
@@ -221,7 +304,7 @@ namespace PasswordProject
             Console.Clear();
 
             GetUsers();
-            
+
 
             if (MenuManager.UserPosition < 0)
             {
@@ -253,7 +336,7 @@ namespace PasswordProject
                 GetIndividualUser();
                 return;
             }
-           
+
         }
 
         public void DeleteUser()
@@ -327,18 +410,15 @@ namespace PasswordProject
                 {
                     case "1":
                         selectedUser.Access = "Admin";
-                        Console.WriteLine("Selected user: " + selectedUser.Access);
                         FileManager.UpdateJson(_path, Users);
                         Console.Clear();
                         GetIndividualUser();
-                        Console.WriteLine(selectedUser.Username + " is promoted to admin");
                         return;
                     case "2":
                         selectedUser.Access = "Moderator";
                         FileManager.UpdateJson(_path, Users);
                         Console.Clear();
                         GetIndividualUser();
-                        Console.WriteLine(selectedUser.Username + " is promoted to moderator");
                         return;
                     case "3":
                         //Console.Clear();
@@ -381,7 +461,6 @@ namespace PasswordProject
                         FileManager.UpdateJson(_path, Users);
                         Console.Clear();
                         GetIndividualUser();
-                        Console.WriteLine(selectedUser.Username + " is promoted to moderator");
                         return;
                     case "2":
                         Console.Clear();
@@ -423,14 +502,12 @@ namespace PasswordProject
                         FileManager.UpdateJson(_path, Users);
                         Console.Clear();
                         GetIndividualUser();
-                        Console.WriteLine(selectedUser.Username + " is demoted to user");
                         return;
                     case "2":
                         selectedUser.Access = "Moderator";
                         FileManager.UpdateJson(_path, Users);
                         Console.Clear();
                         GetIndividualUser();
-                        Console.WriteLine(selectedUser.Username + " is demoted to moderator");
                         return;
                     case "3":
                         Console.Clear();
@@ -445,7 +522,6 @@ namespace PasswordProject
                         GetIndividualUser();
                         DemoteUser();
                         return;
-
 
                 }
 
@@ -503,7 +579,7 @@ namespace PasswordProject
 
             if (!isValidPassword)
             {
-                Console.WriteLine("Invalid email! Choose a password that includes specialcharacter and atleast one number and one uppercase character.");
+                Console.WriteLine("Invalid password! Choose a password that includes specialcharacter and atleast one number and one uppercase character.");
                 EditPassword();
                 return;
             }
@@ -523,89 +599,7 @@ namespace PasswordProject
             FileManager.UpdateJson(_path, Users);
         }
 
-        public void LogInToSystem()
-        {
-            
-            var maxAttempts = 2;
-            var currentAttempt = 0;
 
-            for (int i = 0; i < maxAttempts; i++) 
-            {
-                Console.WriteLine("\nEnter username: ");
-                var login = Console.ReadLine(); 
-
-                foreach (var user in Users)
-                {
-                    if (user.Username == login)
-                    {
-                        MenuManager.LoggedInUserPosition = Users.IndexOf(user);
-                    }
-                }
-
-                if (MenuManager.LoggedInUserPosition == -1)
-                {
-                    Console.WriteLine("User does not exist!"); 
-                    currentAttempt++;
-                    continue; 
-                }
-
-
-                for (int p = 0; p < maxAttempts; p++)
-                {
-                    Console.WriteLine("Enter password: ");
-                    var passwordInput = HidePassword();
-
-                    if (String.IsNullOrWhiteSpace(passwordInput))
-                    {
-                        Console.WriteLine("Password field cannot be empty");
-                        passwordInput = HidePassword();
-                    }
-
-                    if (Users[MenuManager.LoggedInUserPosition].Password != passwordInput)
-                    {
-                        currentAttempt++;
-
-                        if (currentAttempt < 2) 
-                        {
-                            Console.WriteLine("Wrong password. Try again!");
-                        }
-
-                        //MenuManager.LoggedInUserPosition = -1;
-                    }
-
-                    var menu = new MenuManager(new User());
-
-                    if (Users[MenuManager.LoggedInUserPosition].Password == passwordInput)
-                    {
-                        Console.WriteLine("Logging in...");
-                        Thread.Sleep(2000);
-                        if (Users[MenuManager.LoggedInUserPosition].Access == "Admin")
-                        {
-                            menu.UserSystemMenuAdmin();
-                            
-                        }
-                        else if (Users[MenuManager.LoggedInUserPosition].Access == "Moderator")
-                        {
-                            menu.UserSystemMenuModerator();
-                           
-                        }
-                        else
-                        {
-                            menu.UserSystemMenu();
-                            
-                        }
-
-                        break;
-
-                    }
-
-                   
-                }
-                
-            }
-
-            Console.WriteLine("To many tries!");
-        }
     }
 
 

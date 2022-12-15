@@ -36,27 +36,21 @@
     "Access": "User"
   },
   {
-    "Username": "kalllle",
+    "Username": "kallis",
     "Email": "kalle@gmail.com",
-    "Password": "Aa123456!!",
-    "Access": "Moderator"
+    "Password": "ASD12345!",
+    "Access": "Admin"
   },
   {
     "Username": "santis",
     "Email": "ren@gmail.com",
     "Password": "TomtensRenis12!",
-    "Access": "User"
+    "Access": "Moderator"
   },
   {
-    "Username": "tomten",
-    "Email": "jultomten@gmail.com",
-    "Password": "kokolokoAS1!",
-    "Access": "User"
-  },
-  {
-    "Username": "kalle",
-    "Email": "kalles@gmail.com",
-    "Password": "Aa123456!",
+    "Username": "plutten",
+    "Email": "plutten@gmail.com",
+    "Password": "pluttisen!\u0022#2",
     "Access": "User"
   }
 ]
