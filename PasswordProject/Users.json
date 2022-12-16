@@ -6,51 +6,21 @@
     "Access": "Admin"
   },
   {
-    "Username": "macko",
-    "Email": "markus@mail.com",
-    "Password": "SantaClaus123!",
+    "Username": "Emil",
+    "Email": "emil@gmail.com",
+    "Password": "Tipptapp123!",
     "Access": "Admin"
   },
   {
-    "Username": "loggan",
-    "Email": "lo@gmail.com",
-    "Password": "Aa123456!",
+    "Username": "Emma",
+    "Email": "emma@gmail.com",
+    "Password": "Hejhej!23A",
     "Access": "Moderator"
   },
   {
-    "Username": "Kung",
-    "Email": "palle@gmail.com",
-    "Password": "Aa123456!",
-    "Access": "Moderator"
-  },
-  {
-    "Username": "adrian",
-    "Email": "toker@gmail.com",
-    "Password": "Toker!12",
-    "Access": "Admin"
-  },
-  {
-    "Username": "oki",
-    "Email": "oki@gmail.com",
-    "Password": "KOLAI123!",
-    "Access": "User"
-  },
-  {
-    "Username": "kallis",
-    "Email": "kalle@gmail.com",
-    "Password": "ASD12345!",
-    "Access": "Admin"
-  },
-  {
-    "Username": "santis",
-    "Email": "ren@gmail.com",
-    "Password": "TomtensRenis12!",
-    "Access": "Moderator"
-  },
-  {
-    "Username": "plutten",
-    "Email": "plutten@gmail.com",
-    "Password": "pluttisen!\u0022#2",
+    "Username": "markusjunes",
+    "Email": "markus@email.com",
+    "Password": "SommarSol45%",
     "Access": "User"
   }
 ]

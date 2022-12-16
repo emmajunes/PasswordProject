@@ -29,7 +29,7 @@ namespace PasswordProject
                 Console.WriteLine("[3] Quit program");
 
                 Console.Write("\nSelect an option: ");
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().Trim();
 
                 switch (input)
                 {
@@ -44,7 +44,6 @@ namespace PasswordProject
                         break;
                     case "3":
                         isRunning = Quit(isRunning);
-                      
                         break;
                     default:
                         Console.Clear();
@@ -71,12 +70,11 @@ namespace PasswordProject
                 Console.WriteLine("[3] Log out");
 
                 Console.Write("\nSelect an option: ");
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().Trim();
 
                 switch (input)
                 {
                     case "1":
-
                         _userManager.GetIndividualUser();
                         EditMenu();
                         break;
@@ -105,7 +103,6 @@ namespace PasswordProject
         public void UserSystemMenuModerator()
         {
             Console.Clear();
-
             bool isRunning = true;
 
             while (isRunning)
@@ -118,7 +115,7 @@ namespace PasswordProject
                 Console.WriteLine("[4] Log out");
 
                 Console.Write("\nSelect an option: ");
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().Trim();
 
                 switch (input)
                 {
@@ -140,6 +137,12 @@ namespace PasswordProject
                         {
                         _userManager.PromoteUserModerator();
                         }
+                        if (_userManager.Users[UserPosition].Access == "Moderator" || _userManager.Users[UserPosition].Access == "Admin")
+                        {
+                            Console.WriteLine("\nPress enter to go back to menu");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }                      
                         break;
                     case "4":
                         isRunning = LogOut(isRunning);
@@ -155,13 +158,11 @@ namespace PasswordProject
                         UserSystemMenuModerator();
                         return;
                 }
-
             }
         }
         public void UserSystemMenuAdmin()
         {
             Console.Clear();
-
             bool isRunning = true;
 
             while (isRunning)
@@ -173,7 +174,7 @@ namespace PasswordProject
                 Console.WriteLine("[3] Log out");
 
                 Console.Write("\nSelect an option: ");
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().Trim();
 
                 switch (input)
                 {
@@ -183,10 +184,11 @@ namespace PasswordProject
                         Console.WriteLine("New created user: " + _userManager.Users[UserPosition].Username);
                         break;
                     case "2":
+                        Console.Clear();
                         _userManager.GetAllUsernames();
                         _userManager.SelectUser();
                         _userManager.GetIndividualUser();
-                        UserMenu();
+                        UserMenuForAdmin();
                         break;
                     case "3":
                         isRunning = LogOut(isRunning);
@@ -197,15 +199,14 @@ namespace PasswordProject
                         }
                         break;
                     default:
-                        Console.Clear();
-                        Console.WriteLine("There is no option recognized to your input. Try again!");
-                        Thread.Sleep(1500);
+                        Console.Clear();                       
+                        Console.WriteLine("There is no option recognized to your input. Try again!");   
                         break;
                 }
             }
         }
 
-        public void UserMenu()
+        public void UserMenuForAdmin()
         {
 
             bool isRunning = true;
@@ -221,7 +222,7 @@ namespace PasswordProject
                 Console.WriteLine("[5] Go back to menu for usersystem");
 
                 Console.Write("\nSelect an option: ");
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().Trim();
 
                 switch (input)
                 {
@@ -247,7 +248,8 @@ namespace PasswordProject
                         else
                         {
                             Console.WriteLine("Only admin have access to delete a user");
-                        }
+                        }                      
+                        UserSystemMenuAdmin();
                         break;
                     case "5":
                         UserSystemMenuAdmin();
@@ -256,7 +258,7 @@ namespace PasswordProject
                         Console.WriteLine("There is no option recognized to your input. Try again!");
                         Thread.Sleep(1500);
                         _userManager.GetIndividualUser();
-                        UserMenu();
+                        UserMenuForAdmin();
                         return;                  
                 }
             }
@@ -276,7 +278,7 @@ namespace PasswordProject
                 Console.WriteLine("[3] Go back to user menu");
 
                 Console.Write("\nSelect an option: ");
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().Trim();
 
                 switch (input)
                 {
@@ -337,6 +339,8 @@ namespace PasswordProject
 
             if (input == "Y")
             {
+                Console.WriteLine("\nLogging out...");
+                Thread.Sleep(2000);
                 UserPosition = -1;
                 LoggedInUserPosition = -1;
                 isRunning = false;
@@ -360,8 +364,7 @@ namespace PasswordProject
 
             if (exit == "Y")
             {
-                isRunning = false;
-                return isRunning;
+                Environment.Exit(0);
             }
 
             Console.Clear();

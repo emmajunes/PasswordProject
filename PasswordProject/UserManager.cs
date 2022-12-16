@@ -16,6 +16,8 @@ namespace PasswordProject
         {
             GetUsers();
 
+            Console.WriteLine("\nCREATE ACCOUNT");
+
             Console.WriteLine("\nEnter username: ");
             string username = Console.ReadLine();
 
@@ -34,7 +36,6 @@ namespace PasswordProject
                     CreateUser();
                     return;
                 }
-
             }
 
             Console.WriteLine("Enter email: ");
@@ -54,9 +55,14 @@ namespace PasswordProject
 
             var isValidPassword = ValidatePassword(password);
 
-            if (!isValidPassword)
+            if (!isValidPassword || password.Contains("\u0000") || password.Length < 8)
             {
-                Console.WriteLine("Invalid email! Choose a password that includes a specialcharacter and atleast one number and one uppercase character.");
+                Console.WriteLine("Invalid password! ");
+                Console.WriteLine("Password needs to be at least 8 characters long.");
+                Console.WriteLine("Include a specialcharacter.");
+                Console.WriteLine("Include at least one uppercase character.");
+                Console.WriteLine("Include at least one lowercase character.");
+                Console.WriteLine("Include at least one number.\n");
                 CreateUser();
                 return;
             }
@@ -72,7 +78,6 @@ namespace PasswordProject
             Users.Add(newUser);
 
             MenuManager.UserPosition = Users.IndexOf(newUser);
-
             FileManager.UpdateJson(_path, Users);
 
         }
@@ -87,10 +92,9 @@ namespace PasswordProject
             {
                 if (user.Email == email)
                 {
-                    Console.WriteLine("Mail already exists!");
+                    Console.WriteLine("\nEmail already exists!");
                     return false;
                 }
-
             }
 
             try
@@ -104,7 +108,7 @@ namespace PasswordProject
                 return false;
             }
         }
-
+    
         public bool ValidatePassword(string passWord)
         {
             int validConditions = 0;
@@ -136,12 +140,11 @@ namespace PasswordProject
             if (validConditions == 1) return false;
             if (validConditions == 2)
             {
-                char[] special = { '@', '#', '$', '%', '^', '&', '+', '=', '!', '/', '?', '*', '-', '[', ']', '"', '(', ')', '{', '}', '~', '¤' };
+                char[] special = { '@', '#', '$', '%', '^', '&', '+', '=', '!', '/', '?', '*', '-', '[', ']', '"', '(', ')', '{', '}', '~', '¤','´' };
                 if (passWord.IndexOfAny(special) == -1) return false;
             }
             return true;
         }
-
         public string HidePassword()
         {
             string password = "";
@@ -173,7 +176,6 @@ namespace PasswordProject
 
         public void LogInToSystem()
         {
-
             var maxAttempts = 2;
             var currentAttempt = 0;
 
@@ -197,6 +199,7 @@ namespace PasswordProject
                     continue;
                 }
 
+                currentAttempt = 0;
 
                 for (int p = 0; p < maxAttempts; p++)
                 {
@@ -215,41 +218,31 @@ namespace PasswordProject
 
                         if (currentAttempt < 2)
                         {
-                            Console.WriteLine("Wrong password. Try again!");
+                            Console.WriteLine("Wrong password. Try again!\n");
                         }
-
-                        //MenuManager.LoggedInUserPosition = -1;
                     }
 
                     var menu = new MenuManager(new User());
 
                     if (Users[MenuManager.LoggedInUserPosition].Password == passwordInput)
                     {
-                        Console.WriteLine("Logging in...");
+                        Console.WriteLine("\nLogging in...");
                         Thread.Sleep(2000);
                         if (Users[MenuManager.LoggedInUserPosition].Access == "Admin")
                         {
                             menu.UserSystemMenuAdmin();
-
                         }
                         else if (Users[MenuManager.LoggedInUserPosition].Access == "Moderator")
                         {
                             menu.UserSystemMenuModerator();
-
                         }
                         else
                         {
                             menu.UserSystemMenu();
-
                         }
-
                         break;
-
                     }
-
-
                 }
-
             }
 
             Console.WriteLine("To many tries!");
@@ -257,37 +250,47 @@ namespace PasswordProject
 
         public void SelectUser()
         {
-
-            Console.WriteLine("\nSelect user: ");
-            var input = Console.ReadLine();
-
-            if (String.IsNullOrWhiteSpace(input) || Convert.ToInt32(input) <= 0)
-            {
-                Console.WriteLine("Input cannot be empty and needs to be a value over 0");
-                SelectUser();
-                return;
-            }
-
             try
             {
-                MenuManager.UserPosition = Convert.ToInt32(input) - 1;
-            }
+                int selectedInput = 0;
+                var validSelection = false;
+
+                while(!validSelection)
+                {
+                    Console.WriteLine("\nSelect user or press B to go back: ");
+                    var input = Console.ReadLine();
+
+                    if(input.ToUpper() == "B")
+                    {
+                        var menu = new MenuManager(new User());
+                        menu.UserSystemMenuAdmin();
+                        return;
+                    }
+
+                    if (!int.TryParse(input, out selectedInput) || String.IsNullOrWhiteSpace(selectedInput.ToString()) || selectedInput <= 0)
+                    {
+                        Console.WriteLine("Input cannot be empty and needs to be a value over 0");
+                        SelectUser();
+                        return;
+                    }
+
+                    validSelection = true;
+                }
+               
+                MenuManager.UserPosition = selectedInput - 1;
+        }
             catch (ArgumentOutOfRangeException)
             {
                 Console.WriteLine("User index does not exist!");
-
             }
             catch (FormatException)
             {
                 Console.WriteLine("Wrong input!");
-
             }
-
         }
         public void GetAllUsernames()
         {
             GetUsers();
-            //Console.Clear();
 
             Console.WriteLine("\nOVERVIEW OF USERS: \n");
             var index = 1;
@@ -298,20 +301,18 @@ namespace PasswordProject
             }
         }
 
-
         public void GetIndividualUser()
         {
             Console.Clear();
 
             GetUsers();
 
-
             if (MenuManager.UserPosition < 0)
             {
-                Console.WriteLine("\nINFO ABOUT USER: \n");
+                Console.WriteLine("\nINFO ABOUT USER: " + Users[MenuManager.LoggedInUserPosition].Username.ToUpper());
                 Console.WriteLine("USERNAME: " + Users[MenuManager.LoggedInUserPosition].Username);
                 Console.WriteLine("EMAIL: " + Users[MenuManager.LoggedInUserPosition].Email);
-                Console.WriteLine("PASSWORD: " + Users[MenuManager.LoggedInUserPosition].Password);
+                Console.WriteLine("PASSWORD IS NOT AVAILABLE HERE");
                 Console.WriteLine("ACCESS: " + Users[MenuManager.LoggedInUserPosition].Access);
             }
 
@@ -319,76 +320,23 @@ namespace PasswordProject
             {
                 if (MenuManager.UserPosition >= 0)
                 {
-                    Console.WriteLine("\nINFO ABOUT USER: \n");
+                    Console.WriteLine("\nINFO ABOUT USER: " + Users[MenuManager.UserPosition].Username.ToUpper());
                     Console.WriteLine("USERNAME: " + Users[MenuManager.UserPosition].Username);
                     Console.WriteLine("EMAIL: " + Users[MenuManager.UserPosition].Email);
-                    Console.WriteLine("PASSWORD: " + Users[MenuManager.UserPosition].Password);
+                    Console.WriteLine("PASSWORD IS NOT AVAILABLE HERE");
                     Console.WriteLine("ACCESS: " + Users[MenuManager.UserPosition].Access);
                 }
             }
             catch (ArgumentOutOfRangeException)
             {
-
-                Console.WriteLine("User index does not exist. Try again!");
-                Thread.Sleep(1500);
                 GetAllUsernames();
+                Console.WriteLine("\nUser index does not exist. Try again!");
                 SelectUser();
                 GetIndividualUser();
                 return;
             }
-
         }
 
-        public void DeleteUser()
-        {
-            Console.WriteLine("Do you want to delete this user y/n? ");
-            var deleteAnswer = Console.ReadLine().ToUpper();
-
-            if (String.IsNullOrWhiteSpace(deleteAnswer))
-            {
-                Console.WriteLine("Input field cannot be empty");
-                DeleteUser();
-                return;
-            }
-
-            if (deleteAnswer == "Y")
-            {
-                Console.Clear();
-
-                if (MenuManager.UserPosition < 0)
-                {
-                    Users.RemoveAt(MenuManager.LoggedInUserPosition);
-                    FileManager.UpdateJson(_path, Users);
-                    Console.WriteLine("You deleted your account.");
-                    Thread.Sleep(1500);
-                    var menu = new MenuManager(new User());
-                    menu.StartMenu();
-
-                    return;
-                }
-                if (MenuManager.UserPosition >= 0)
-                {
-                    Console.WriteLine("Deleted user: " + Users[MenuManager.UserPosition].Username);
-                    Users.RemoveAt(MenuManager.UserPosition);
-                    FileManager.UpdateJson(_path, Users);
-
-                    return;
-                }
-
-            }
-
-            else if (deleteAnswer == "N")
-            {
-                return;
-            }
-
-            else
-            {
-                Console.WriteLine("Answer needs to be a letter of y or n");
-                DeleteUser();
-                return;
-            }
-        }
 
         public void PromoteUserAdmin()
         {
@@ -404,6 +352,8 @@ namespace PasswordProject
                 Console.WriteLine("[1] Admin");
                 Console.WriteLine("[2] Moderator");
                 Console.WriteLine("[3] Go back to menu");
+
+                Console.WriteLine("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
@@ -421,10 +371,9 @@ namespace PasswordProject
                         GetIndividualUser();
                         return;
                     case "3":
-                        //Console.Clear();
                         var menu = new MenuManager(new User());
                         GetIndividualUser();
-                        menu.UserMenu();
+                        menu.UserMenuForAdmin();
                         break;
                     default:
                         Console.WriteLine("There is no option recognized to your input. Try again!");
@@ -451,6 +400,8 @@ namespace PasswordProject
                 Console.WriteLine("\nPromote user to: \n");
                 Console.WriteLine("[1] Moderator");
                 Console.WriteLine("[2] Go back to menu");
+
+                Console.WriteLine("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
@@ -484,7 +435,6 @@ namespace PasswordProject
         public void DemoteUser()
         {
             var selectedUser = Users[MenuManager.UserPosition];
-
             bool isRunning = true;
 
             while (isRunning)
@@ -493,6 +443,8 @@ namespace PasswordProject
                 Console.WriteLine("[1] User");
                 Console.WriteLine("[2] Moderator");
                 Console.WriteLine("[3] Go back to user menu");
+
+                Console.WriteLine("\nSelect an option: ");
                 var input = Console.ReadLine();
 
                 switch (input)
@@ -504,16 +456,26 @@ namespace PasswordProject
                         GetIndividualUser();
                         return;
                     case "2":
-                        selectedUser.Access = "Moderator";
-                        FileManager.UpdateJson(_path, Users);
-                        Console.Clear();
-                        GetIndividualUser();
+                        if(selectedUser.Access == "User")
+                        {
+                            Console.WriteLine("You can not demote user to moderator");
+                            Thread.Sleep(1500);
+                            GetIndividualUser();
+                            return;
+                        }
+                        else
+                        {
+                            selectedUser.Access = "Moderator";
+                            FileManager.UpdateJson(_path, Users);
+                            Console.Clear();
+                            GetIndividualUser();
+                        }
                         return;
                     case "3":
                         Console.Clear();
                         var menu = new MenuManager(new User());
                         GetIndividualUser();
-                        menu.UserMenu();
+                        menu.UserMenuForAdmin();
                         break;
                     default:
                         Console.WriteLine("There is no option recognized to your input. Try again!");
@@ -528,11 +490,56 @@ namespace PasswordProject
             }
 
             FileManager.UpdateJson(_path, Users);
+        }
 
+        public void DeleteUser()
+        {
+            Console.WriteLine("\nDo you want to delete this user y/n? ");
+            var deleteAnswer = Console.ReadLine().ToUpper();
+
+            if (String.IsNullOrWhiteSpace(deleteAnswer))
+            {
+                Console.WriteLine("Input field cannot be empty");
+                DeleteUser();
+                return;
+            }
+
+            if (deleteAnswer == "Y")
+            {
+                Console.Clear();
+
+                if (MenuManager.UserPosition < 0)
+                {
+                    Users.RemoveAt(MenuManager.LoggedInUserPosition);
+                    FileManager.UpdateJson(_path, Users);
+
+                    Console.WriteLine("You deleted your account.");
+                    Thread.Sleep(1500);
+                    var menu = new MenuManager(new User());
+                    menu.StartMenu();
+                    return;
+                }
+                if (MenuManager.UserPosition >= 0)
+                {
+                    Console.WriteLine("Deleted user: " + Users[MenuManager.UserPosition].Username);
+                    Users.RemoveAt(MenuManager.UserPosition);
+                    FileManager.UpdateJson(_path, Users);
+                    return;
+                }
+            }
+            else if (deleteAnswer == "N")
+            {
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Answer needs to be a letter of y or n");
+                DeleteUser();
+                return;
+            }
         }
         public void EditUserName()
         {
-
             Console.WriteLine("Write a new username: ");
             var newUsername = Console.ReadLine();
 
@@ -550,7 +557,6 @@ namespace PasswordProject
                     EditUserName();
                     return;
                 }
-
             }
 
             if (MenuManager.UserPosition < 0)
@@ -565,21 +571,58 @@ namespace PasswordProject
 
             }
 
-
             FileManager.UpdateJson(_path, Users);
         }
 
         public void EditPassword()
         {
+            Console.WriteLine("\nCurrent password: ");
+            var currentPassword = HidePassword();
+
+            if (MenuManager.UserPosition < 0)
+            {
+                var loggedInUser = Users[MenuManager.LoggedInUserPosition];
+                if(loggedInUser.Password == currentPassword)
+                {
+                    Console.WriteLine("Password confirmed");
+                }
+                else
+                {
+                    Console.WriteLine("Wrong password!");
+                    EditPassword();
+                    return;
+                }
+            }
+            if (MenuManager.UserPosition >= 0)
+            {
+                var selectedUser = Users[MenuManager.UserPosition];
+                if (selectedUser.Password == currentPassword)
+                {
+                    Console.WriteLine("Password confirmed");
+                }
+                else
+                {
+                    Console.WriteLine("Wrong password!");
+                    EditPassword();
+                    return;
+                }
+
+            }
+            
 
             Console.WriteLine("Write a new password: ");
             var newPassword = HidePassword();
 
             var isValidPassword = ValidatePassword(newPassword);
 
-            if (!isValidPassword)
+            if (!isValidPassword || newPassword.Contains("\u0000") || newPassword.Length < 8)
             {
-                Console.WriteLine("Invalid password! Choose a password that includes specialcharacter and atleast one number and one uppercase character.");
+                Console.WriteLine("Invalid password! ");
+                Console.WriteLine("Password needs to be 8 characters long.");
+                Console.WriteLine("Include a specialcharacter.");
+                Console.WriteLine("Include at least one uppercase character.");
+                Console.WriteLine("Include at least one lowercase character.");
+                Console.WriteLine("Include at least one number.\n");
                 EditPassword();
                 return;
             }
@@ -599,8 +642,6 @@ namespace PasswordProject
             FileManager.UpdateJson(_path, Users);
         }
 
-
     }
-
 
 }

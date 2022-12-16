@@ -17,8 +17,6 @@ namespace PasswordProject
 
                 File.WriteAllText(path, @"[{""Username"":""Admin"",""Email"":""admin@gmail.com"",""Password"":""S"",""Access"":""Admin""}]");
             }
-
-            
         }
 
         public static List<T> GetJson<T>(string path)
@@ -29,7 +27,6 @@ namespace PasswordProject
 
             return lists;
         }
-
         public static void UpdateJson<T>(string path, T data)
         {
             var jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions() { WriteIndented = true});

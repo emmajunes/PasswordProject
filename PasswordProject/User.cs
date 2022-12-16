@@ -3,7 +3,6 @@ using System.Text.Json.Nodes;
 
 namespace PasswordProject
 {
-    
     public class User
     {
         public string Username { get; set; }
@@ -12,5 +11,4 @@ namespace PasswordProject
         public string Access { get; set; }
 
     }
-
 }
